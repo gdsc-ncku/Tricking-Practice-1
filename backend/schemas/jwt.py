@@ -12,9 +12,13 @@ from .user import UserView
 
 
 class JWTPayload(UserView):
-    iat: datetime = Field(default_factory=lambda: datetime.now(UTC))
+    iat: datetime = Field(
+        default_factory=lambda: datetime.now(UTC),
+        examples=[1737170068]
+    )
     exp: datetime = Field(
-        default_factory=lambda: datetime.now(UTC) + timedelta(days=7)
+        default_factory=lambda: datetime.now(UTC) + timedelta(days=7),
+        examples=[1737774868]
     )
 
     @field_validator("exp", "iat", mode="before")
@@ -31,4 +35,8 @@ class JWTPayload(UserView):
 
 class JWT(BaseModel):
     token_type: str = "Bearer"
-    access_token: str
+    access_token: str = Field(
+        title="Access Token",
+        description="The access token in JWT format.",
+        examples=["eyJhb ... KUfjg"]
+    )

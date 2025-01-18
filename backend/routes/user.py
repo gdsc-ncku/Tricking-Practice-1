@@ -1,5 +1,5 @@
 from beanie.operators import And, Or
-from fastapi import APIRouter, Body, HTTPException, status
+from fastapi import APIRouter, Body, HTTPException, Path, status
 
 from datetime import datetime
 try:
@@ -47,9 +47,14 @@ router = APIRouter(
         404: {
             "description": "User not found."
         }
-    }
+    },
 )
-async def get_user(uid: str) -> UserView:
+async def get_user(
+    uid: str = Path(
+        title="UID",
+        description="UID of user you want to search",
+    )
+) -> UserView:
     user = await User.find_one(User.uid == uid).project(UserView)
 
     if user:
@@ -111,7 +116,7 @@ async def update_data(
         }
     }
 )
-async def delete_user(user: UserDepends, password: str = Body()) -> None:
+async def delete_user(user: UserDepends, password: str = Body(example="passw0rd")) -> None:
     user_data = await User.find_one(User.uid == user.uid)
     if not user_data.check_password(password):
         raise WRONG_PASSWORD

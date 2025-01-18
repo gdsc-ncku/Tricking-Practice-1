@@ -2,7 +2,7 @@ from beanie.operators import Or
 from fastapi import APIRouter, Depends, HTTPException, Security, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jwt import decode
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from typing import Annotated
 
@@ -13,8 +13,16 @@ from utils.generate_jwt import generate_jwt
 
 
 class LoginData(BaseModel):
-    account: str
-    password: str
+    account: str = Field(
+        title="Account",
+        description="Login account",
+        examples=["account"]
+    )
+    password: str = Field(
+        title="Password",
+        description="Login password",
+        examples=["passw0rd"]
+    )
     # valid_code: str
 
 

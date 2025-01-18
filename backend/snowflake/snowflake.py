@@ -68,7 +68,7 @@ class SnowflakeID():
         json_schema = handler(core_schema)
         json_schema = handler.resolve_ref_schema(json_schema)
         json_schema["type"] = "string"
-        json_schema["examples"] = ["123"]
+        json_schema["examples"] = ["6209533852516352"]
         json_schema["title"] = "SnowflakeID"
         return json_schema
 

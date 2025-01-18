@@ -20,34 +20,40 @@ uid_generator = SnowflakeGenerator(INSTANCE_ID)
 class UserBase(BaseModel):
     name: str = Field(
         title="Username",
-        description="Username of user."
+        description="Username of user.",
+        examples=["username"],
     )
     email: Optional[str] = Field(
         default=None,
         title="Email",
-        description="User's email."
+        description="User's email.",
+        examples=["passw0rd"],
     )
     phone: Optional[str] = Field(
         default=None,
         title="Phone number",
-        description="User's phone number."
+        description="User's phone number.",
+        examples=["0912345678"],
     )
     gender: Optional[bool] = Field(
         default=None,
         title="Gender",
-        description="User's gender, true rerepresent female."
+        description="User's gender, true rerepresent female.",
+        examples=[True],
     )
     age: Optional[int] = Field(
         default=None,
         title="Age",
-        description="User's age."
+        description="User's age.",
+        examples=[20],
     )
 
 
 class UserWithPassword(UserBase):
     password: bytes = Field(
         title="Password(Hash)",
-        description="Password of user after hash."
+        description="Password of user after hash.",
+        examples=[b"passw0rd"]
     )
 
     def check_password(self, password: str) -> bool:
@@ -59,26 +65,11 @@ class UserWithUID(UserBase):
         title="UID",
         description="UID of user, use snowflake format.",
         default_factory=uid_generator.next_id,
+        examples=["6209533852516352"]
     )
 
 
 class User(Document, UserWithUID, UserWithPassword):
-    model_config = ConfigDict(
-        json_schema_extra={
-            "examples": [
-                {
-                    "uid": 302774180611358720,
-                    "name": "User",
-                    "password": b"4fe3d2877cff0475",
-                    "email": "contact@example.com",
-                    "phone": None,
-                    "gender": True,
-                    "age": 24,
-                }
-            ]
-        }
-    )
-
     class Settings:
         name = "Users"
         bson_encoders = {
@@ -93,7 +84,8 @@ class UserView(UserWithUID):
 class UserCreate(UserBase):
     password: str = Field(
         title="Password",
-        description="Password of user."
+        description="Password of user.",
+        examples=["new_passw0rd"]
     )
 
     @field_serializer("password")
@@ -107,5 +99,6 @@ class UserCreate(UserBase):
 class UserUpdate(UserCreate):
     original_password: str = Field(
         title="Original Password",
-        description="The original password is needed if user want to update their data."
+        description="The original password is needed if user want to update their data.",
+        examples=["passw0rd"]
     )
